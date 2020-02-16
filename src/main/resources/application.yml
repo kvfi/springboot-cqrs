@@ -1,0 +1,23 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+axon:
+  kafka:
+    bootstrap-servers: localhost:9092
+    client-id: accounts
+    default-topic: payments
+    properties:
+      security.protocol: PLAINTEXT
+    publisher:
+      confirmation-mode: transactional
+    producer:
+      retries: 5
+      event-processor-mode: subscribing
+    fetcher:
+      poll-timeout: 3000
+    consumer:
+      enable-auto-commit: true
+      auto-commit-interval: 3000
+      event-processor-mode: tracking
