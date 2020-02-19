@@ -30,7 +30,7 @@ public class EventProducer implements Runnable {
     public void run() {
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", this.kafkaBootstrapServers);
+        props.put("bootstrap.servers", "localhost:");
         props.put("acks", "all");
         props.put("retries", 0);
         props.put("batch.size", 16384);

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Menu, Breadcrumb, Icon } from 'antd'
+import { Layout, Menu, Breadcrumb, Icon, Dropdown, Avatar } from 'antd'
 import styled from 'styled-components'
 
 const { SubMenu } = Menu
@@ -15,14 +15,56 @@ const Logo = styled.div`
 
 const GlobalContainer = props => {
     const { children } = props
+
+    const userInfo = {
+        firstName: 'Last',
+        lastName: 'Test'
+    }
     return (
         <Layout>
             <Header className="header">
                 <Logo />
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}>
+                <Menu
+                    theme="dark"
+                    mode="horizontal"
+                    defaultSelectedKeys={['2']}
+                    style={{
+                        lineHeight: '64px',
+                        float: 'left',
+                        display: 'flex',
+                        alignItems: 'left',
+                        justifyContent: 'left'
+                    }}
+                >
                     <Menu.Item key="1">nav 1</Menu.Item>
                     <Menu.Item key="2">nav 2</Menu.Item>
                     <Menu.Item key="3">nav 3</Menu.Item>
+                </Menu>
+                <Menu
+                    mode="horizontal"
+                    theme="dark"
+                    defaultSelectedKeys={['2']}
+                    style={{
+                        lineHeight: '64px',
+                        display: 'flex',
+                        alignItems: 'right',
+                        justifyContent: 'right',
+                        marginRight: '24px'
+                    }}
+                >
+                    <Dropdown
+                        overlay={
+                            <Menu>
+                                <Menu.Item key="0">
+                                    <span>Link 1</span>
+                                </Menu.Item>
+                            </Menu>
+                        }
+                    >
+                        <span style={{ color: '#999', fontSize: '14px' }}>
+                            <Avatar icon="user" size="small" style={{ marginRight: '10px' }} /> {userInfo.firstName} {userInfo.lastName}
+                        </span>
+                    </Dropdown>
                 </Menu>
             </Header>
             <Content style={{ padding: '0 50px' }}>

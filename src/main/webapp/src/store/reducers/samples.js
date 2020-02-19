@@ -4,17 +4,11 @@ const samples = (state = [], action) => {
     switch (action.type) {
         case ADD_SAMPLE: {
             const sample = action.payload
-            if (!state.includes(sample)) {
-                return [...state, sample]
-            }
-            return state
+            return [...state, sample]
         }
         case REMOVE_SAMPLE: {
             const sample = action.payload
-            if (state.includes(sample)) {
-                return [...state, state.filter(s => s !== sample)]
-            }
-            return state
+            return [...state, state.filter(s => s !== sample)]
         }
         default:
             return state

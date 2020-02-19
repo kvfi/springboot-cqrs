@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Typography, Button, Form, Input } from 'antd'
+import { Typography, Button, Form, Input, message } from 'antd'
 
 import { addSample } from '../../store/samples/actions'
 import getSamples from '../../store/samples/selectors'
@@ -9,14 +9,21 @@ const { Title } = Typography
 
 const SampleForm = props => {
     const {
-        form: { getFieldDecorator, validateFields }
+        form: { getFieldDecorator, validateFields },
+        samples
     } = props
 
     const handleAddSample = e => {
         e.preventDefault()
         validateFields((err, values) => {
             if (!err) {
-                props.addSample(values.name)
+                const { name } = values
+                if (!samples.includes(name)) {
+                    props.addSample(name)
+                    message.success(`Text successfully added: ${name}.`)
+                } else {
+                    message.error(`Text already added: ${name}.`)
+                }
             }
         })
     }
@@ -52,15 +59,23 @@ const Home = props => {
         )(SampleForm)
     )
 
+    useEffect(() => {
+        document.title = 'Home'
+    }, [])
+
     return (
         <>
             <Title level={2}>Home</Title>
             <WrappedSampleForm />
             <br />
-            Sample size: {samples.length}
-            {samples.map(s => {
-                return <li key={s}>{s}</li>
-            })}
+            <Title level={4}>Sample size: {samples.length}</Title>
+            {samples.length > 0 && (
+                <ul>
+                    {samples.map(s => {
+                        return <li key={s}>{s}</li>
+                    })}
+                </ul>
+            )}
         </>
     )
 }

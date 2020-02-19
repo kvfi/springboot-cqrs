@@ -49,7 +49,6 @@ public class AccountAggregate {
 
         AggregateLifecycle.apply(new AccountActivatedEvent(this.id, Status.ACTIVATED));
 
-        System.out.println(taskExecutor);
         if (this.accountType == AccountType.PREMIUM) {
             AggregateLifecycle.apply(new AccountUpgradedEvent(this.id, AccountType.PREMIUM));
         }
