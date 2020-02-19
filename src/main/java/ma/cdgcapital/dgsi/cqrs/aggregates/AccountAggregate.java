@@ -4,6 +4,7 @@ import ma.cdgcapital.dgsi.cqrs.commands.CreateAccountCommand;
 import ma.cdgcapital.dgsi.cqrs.commands.CreditMoneyCommand;
 import ma.cdgcapital.dgsi.cqrs.commands.DebitMoneyCommand;
 import ma.cdgcapital.dgsi.cqrs.events.*;
+import ma.cdgcapital.dgsi.cqrs.producers.EventProducer;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -26,14 +27,14 @@ public class AccountAggregate {
 
     private AccountType accountType;
 
-    @Autowired
     private TaskExecutor taskExecutor;
 
     public AccountAggregate() {
     }
 
     @CommandHandler
-    public AccountAggregate(CreateAccountCommand createAccountCommand) {
+    public AccountAggregate(CreateAccountCommand createAccountCommand, TaskExecutor taskExecutor) {
+        this.taskExecutor = taskExecutor;
         AggregateLifecycle.apply(new AccountCreatedEvent(createAccountCommand.id, createAccountCommand.accountBalance,
                 createAccountCommand.currency));
     }
@@ -51,6 +52,7 @@ public class AccountAggregate {
 
         if (this.accountType == AccountType.PREMIUM) {
             AggregateLifecycle.apply(new AccountUpgradedEvent(this.id, AccountType.PREMIUM));
+            this.taskExecutor.execute(new EventProducer("vips", this.id));
         }
     }
 
