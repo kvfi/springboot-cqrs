@@ -3,7 +3,13 @@ spring:
     mongodb:
       host: localhost
       port: 27017
+      database: frontview
+
 axon:
+  serializer:
+    general: jackson
+    messages: jackson
+    events: jackson
   kafka:
     bootstrap-servers: localhost:9092
     client-id: accounts

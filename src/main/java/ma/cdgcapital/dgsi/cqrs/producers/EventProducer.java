@@ -15,8 +15,6 @@ public class EventProducer implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(EventProducer.class);
 
-    @Value("${axon.kafka.bootstrap-servers}")
-    private String kafkaBootstrapServers;
 
     private String message;
     private String topic;
@@ -30,7 +28,7 @@ public class EventProducer implements Runnable {
     public void run() {
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", this.kafkaBootstrapServers);
+        props.put("bootstrap.servers", "localhost:9092");
         props.put("acks", "all");
         props.put("retries", 0);
         props.put("batch.size", 16384);

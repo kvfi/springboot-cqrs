@@ -1,6 +1,7 @@
 package ma.cdgcapital.dgsi.cqrs.services.queries;
 
 import org.axonframework.eventsourcing.eventstore.EventStore;
+import org.axonframework.messaging.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,6 @@ public class AccountQueryServiceImpl implements AccountQueryService {
 
     @Override
     public List<Object> listEventsForAccount(String accountNumber) {
-        return eventStore.readEvents(accountNumber).asStream().map(s -> s.getPayload()).collect(Collectors.toList());
+        return eventStore.readEvents(accountNumber).asStream().map(Message::getPayload).collect(Collectors.toList());
     }
 }
