@@ -1,5 +1,6 @@
 package ma.cdgcapital.dgsi.cqrs.aggregates;
 
+import lombok.extern.slf4j.Slf4j;
 import ma.cdgcapital.dgsi.cqrs.commands.CreateAccountCommand;
 import ma.cdgcapital.dgsi.cqrs.commands.CreditMoneyCommand;
 import ma.cdgcapital.dgsi.cqrs.commands.DebitMoneyCommand;
@@ -12,9 +13,11 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 
 @Aggregate
+@Slf4j
 public class AccountAggregate {
 
     @AggregateIdentifier
@@ -30,21 +33,24 @@ public class AccountAggregate {
 
     private TaskExecutor taskExecutor;
 
+    @Autowired
     private AccountRepository accountRepository;
 
     public AccountAggregate() {
     }
 
     @CommandHandler
-    public AccountAggregate(CreateAccountCommand createAccountCommand, TaskExecutor taskExecutor, AccountRepository accountRepository) {
+    public AccountAggregate(CreateAccountCommand createAccountCommand, TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
-        this.accountRepository = accountRepository;
         AggregateLifecycle.apply(new AccountCreatedEvent(createAccountCommand.id, createAccountCommand.accountBalance,
                 createAccountCommand.currency));
     }
 
     @EventSourcingHandler
     protected void on(AccountCreatedEvent accountCreatedEvent) {
+
+        log.info("Handling AccountCreatedEvent for Account {}", accountCreatedEvent.id);
+
         this.id = accountCreatedEvent.id;
         this.accountBalance = accountCreatedEvent.accountBalance;
         this.currency = accountCreatedEvent.currency;
@@ -72,6 +78,7 @@ public class AccountAggregate {
     @EventSourcingHandler
     protected void on(AccountActivatedEvent accountActivatedEvent) {
         this.status = String.valueOf(accountActivatedEvent.status);
+        log.info("Handling AccountActivatedEvent for Account {}", accountActivatedEvent.id);
     }
 
     @CommandHandler
@@ -83,7 +90,10 @@ public class AccountAggregate {
     @EventSourcingHandler
     protected void on(MoneyCreditedEvent moneyCreditedEvent) {
 
-        if (this.accountBalance < 0 & (this.accountBalance + moneyCreditedEvent.creditAmount) >= 0) {
+        if ((this.accountBalance + moneyCreditedEvent.creditAmount) >= 0) {
+
+            log.info("Handling MoneyCreditedEvent for Account {}", moneyCreditedEvent.id);
+
             AggregateLifecycle.apply(new AccountActivatedEvent(this.id, Status.ACTIVATED));
         }
 
