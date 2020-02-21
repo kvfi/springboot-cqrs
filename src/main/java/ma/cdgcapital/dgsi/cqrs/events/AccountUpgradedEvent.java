@@ -1,6 +1,6 @@
 package ma.cdgcapital.dgsi.cqrs.events;
 
-import ma.cdgcapital.dgsi.cqrs.aggregates.AccountType;
+import ma.cdgcapital.dgsi.cqrs.enums.AccountType;
 
 public class AccountUpgradedEvent extends BaseEvent<String> {
 

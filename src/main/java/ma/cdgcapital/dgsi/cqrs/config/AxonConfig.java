@@ -22,13 +22,6 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter(AxonAutoConfiguration.class)
 public class AxonConfig {
 
-    @Bean
-    public EmbeddedEventStore eventStore(EventStorageEngine storageEngine, AxonConfiguration configuration) {
-        return EmbeddedEventStore.builder()
-                .storageEngine(storageEngine)
-                .messageMonitor(configuration.messageMonitor(EventStore.class, "eventStore"))
-                .build();
-    }
 
     @Bean
     public EventStorageEngine storageEngine(MongoClient client) {

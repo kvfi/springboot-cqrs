@@ -10,4 +10,6 @@ import java.util.List;
 public interface AccountRepository extends MongoRepository<Account, Long> {
 
     List<Account> findAll();
+
+    List<Account> findByStatus(String status);
 }

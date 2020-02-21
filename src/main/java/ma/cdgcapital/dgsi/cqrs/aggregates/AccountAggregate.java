@@ -3,19 +3,24 @@ package ma.cdgcapital.dgsi.cqrs.aggregates;
 import ma.cdgcapital.dgsi.cqrs.commands.CreateAccountCommand;
 import ma.cdgcapital.dgsi.cqrs.commands.CreditMoneyCommand;
 import ma.cdgcapital.dgsi.cqrs.commands.DebitMoneyCommand;
+import ma.cdgcapital.dgsi.cqrs.controllers.AccountModelController;
+import ma.cdgcapital.dgsi.cqrs.enums.AccountType;
+import ma.cdgcapital.dgsi.cqrs.enums.Status;
 import ma.cdgcapital.dgsi.cqrs.events.*;
-import ma.cdgcapital.dgsi.cqrs.models.Account;
-import ma.cdgcapital.dgsi.cqrs.producers.EventProducer;
 import ma.cdgcapital.dgsi.cqrs.repository.AccountRepository;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
-import org.springframework.core.task.TaskExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Aggregate
 public class AccountAggregate {
+
+    private final Logger logger = LoggerFactory.getLogger(AccountModelController.class);
 
     @AggregateIdentifier
     private String id;
@@ -28,23 +33,22 @@ public class AccountAggregate {
 
     private AccountType accountType;
 
-    private TaskExecutor taskExecutor;
-
+    @Autowired
     private AccountRepository accountRepository;
 
     public AccountAggregate() {
     }
 
     @CommandHandler
-    public AccountAggregate(CreateAccountCommand createAccountCommand, TaskExecutor taskExecutor, AccountRepository accountRepository) {
-        this.taskExecutor = taskExecutor;
-        this.accountRepository = accountRepository;
+    public AccountAggregate(CreateAccountCommand createAccountCommand) {
+        logger.info("Handling CreateAccountCommand");
         AggregateLifecycle.apply(new AccountCreatedEvent(createAccountCommand.id, createAccountCommand.accountBalance,
                 createAccountCommand.currency));
     }
 
     @EventSourcingHandler
     protected void on(AccountCreatedEvent accountCreatedEvent) {
+        logger.debug("Handling AccountCreatedEvent");
         this.id = accountCreatedEvent.id;
         this.accountBalance = accountCreatedEvent.accountBalance;
         this.currency = accountCreatedEvent.currency;
@@ -54,19 +58,7 @@ public class AccountAggregate {
 
         AggregateLifecycle.apply(new AccountActivatedEvent(this.id, Status.ACTIVATED));
 
-        Account account = new Account();
-        account.setAccountNumber(this.id);
-        account.setBalance(this.accountBalance);
-        account.setAccountType(this.accountType);
-        account.setStatus(Status.valueOf(this.status));
 
-        if (this.accountType == AccountType.PREMIUM) {
-            AggregateLifecycle.apply(new AccountUpgradedEvent(this.id, AccountType.PREMIUM));
-            this.taskExecutor.execute(new EventProducer("vips", this.id));
-            account.setPremium(true);
-        }
-
-        this.accountRepository.save(account);
     }
 
     @EventSourcingHandler

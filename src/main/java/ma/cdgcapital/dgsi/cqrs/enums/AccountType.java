@@ -1,4 +1,4 @@
-package ma.cdgcapital.dgsi.cqrs.aggregates;
+package ma.cdgcapital.dgsi.cqrs.enums;
 
 public enum AccountType {
     PREMIUM, NORMAL

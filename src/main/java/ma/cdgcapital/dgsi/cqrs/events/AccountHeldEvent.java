@@ -1,6 +1,6 @@
 package ma.cdgcapital.dgsi.cqrs.events;
 
-import ma.cdgcapital.dgsi.cqrs.aggregates.Status;
+import ma.cdgcapital.dgsi.cqrs.enums.Status;
 
 public class AccountHeldEvent extends BaseEvent<String> {
 
