@@ -7,6 +7,8 @@ import ma.cdgcapital.dgsi.cqrs.controllers.AccountModelController;
 import ma.cdgcapital.dgsi.cqrs.enums.AccountType;
 import ma.cdgcapital.dgsi.cqrs.enums.Status;
 import ma.cdgcapital.dgsi.cqrs.events.*;
+import ma.cdgcapital.dgsi.cqrs.models.Account;
+import ma.cdgcapital.dgsi.cqrs.producers.EventProducer;
 import ma.cdgcapital.dgsi.cqrs.repository.AccountRepository;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -16,6 +18,8 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 
 @Aggregate
 public class AccountAggregate {
@@ -32,6 +36,9 @@ public class AccountAggregate {
     private String status;
 
     private AccountType accountType;
+
+    @Autowired
+    private TaskExecutor taskExecutor;
 
     @Autowired
     private AccountRepository accountRepository;

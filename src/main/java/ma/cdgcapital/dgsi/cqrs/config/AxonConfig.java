@@ -1,15 +1,13 @@
 package ma.cdgcapital.dgsi.cqrs.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
+import org.axonframework.eventhandling.tokenstore.TokenStore;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
 import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.extensions.mongo.DefaultMongoTemplate;
 import org.axonframework.extensions.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
-import org.axonframework.serialization.Serializer;
+import org.axonframework.extensions.mongo.eventsourcing.tokenstore.MongoTokenStore;
 import org.axonframework.serialization.json.JacksonSerializer;
 import org.axonframework.spring.config.AxonConfiguration;
 import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
@@ -26,5 +24,13 @@ public class AxonConfig {
     @Bean
     public EventStorageEngine storageEngine(MongoClient client) {
         return MongoEventStorageEngine.builder().mongoTemplate(DefaultMongoTemplate.builder().mongoDatabase(client).build()).build();
+    }
+
+    @Bean
+    public TokenStore myCustomTokenStore() {
+        return MongoTokenStore.builder()
+                .mongoTemplate(DefaultMongoTemplate.builder().mongoDatabase(new MongoClient()).build())
+                .serializer(JacksonSerializer.defaultSerializer())
+                .build();
     }
 }
