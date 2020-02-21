@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
-import { Typography, Button, Form, Input, message } from 'antd'
+import React, {useEffect} from 'react'
+import {connect} from 'react-redux'
+import {Typography, Button, Form, Input, message} from 'antd'
 
-import { addSample } from '../../store/samples/actions'
+import {addSample} from '../../store/samples/actions'
 import getSamples from '../../store/samples/selectors'
 
-const { Title } = Typography
+const {Title} = Typography
 
 const SampleForm = props => {
     const {
-        form: { getFieldDecorator, validateFields },
+        form: {getFieldDecorator, validateFields},
         samples
     } = props
 
@@ -17,7 +17,7 @@ const SampleForm = props => {
         e.preventDefault()
         validateFields((err, values) => {
             if (!err) {
-                const { name } = values
+                const {name} = values
                 if (!samples.includes(name)) {
                     props.addSample(name)
                     message.success(`Text successfully added: ${name}.`)
@@ -37,7 +37,7 @@ const SampleForm = props => {
                             required: true
                         }
                     ]
-                })(<Input autoFocus />)}
+                })(<Input autoFocus/>)}
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">
@@ -49,13 +49,13 @@ const SampleForm = props => {
 }
 
 const Home = props => {
-    const { samples } = props
-    const WrappedSampleForm = Form.create({ name: 'sample_form' })(
+    const {samples} = props
+    const WrappedSampleForm = Form.create({name: 'sample_form'})(
         connect(
             state => ({
                 samples: getSamples(state)
             }),
-            { addSample }
+            {addSample}
         )(SampleForm)
     )
 
@@ -66,8 +66,8 @@ const Home = props => {
     return (
         <>
             <Title level={2}>Home</Title>
-            <WrappedSampleForm />
-            <br />
+            <WrappedSampleForm/>
+            <br/>
             <Title level={4}>Sample size: {samples.length}</Title>
             {samples.length > 0 && (
                 <ul>
@@ -84,5 +84,5 @@ export default connect(
     state => ({
         samples: getSamples(state)
     }),
-    { addSample }
+    {addSample}
 )(Home)

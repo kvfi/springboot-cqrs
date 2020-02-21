@@ -1,6 +1,7 @@
 package ma.cdgcapital.dgsi.cqrs.events;
 
 import ma.cdgcapital.dgsi.cqrs.enums.Status;
+import org.axonframework.serialization.Revision;
 
 public class AccountActivatedEvent extends BaseEvent<String> {
 

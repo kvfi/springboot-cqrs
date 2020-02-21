@@ -1,4 +1,4 @@
-import { ADD_SAMPLE, REMOVE_SAMPLE } from '../samples/types'
+import {ADD_SAMPLE, REMOVE_SAMPLE} from '../samples/types'
 
 const samples = (state = [], action) => {
     switch (action.type) {

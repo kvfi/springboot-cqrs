@@ -1,4 +1,4 @@
-import { ADD_SAMPLE, REMOVE_SAMPLE } from './types'
+import {ADD_SAMPLE, REMOVE_SAMPLE} from './types'
 
 export const addSample = sample => ({
     type: ADD_SAMPLE,
