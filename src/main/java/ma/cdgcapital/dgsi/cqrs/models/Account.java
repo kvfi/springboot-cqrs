@@ -3,7 +3,11 @@ package ma.cdgcapital.dgsi.cqrs.models;
 import ma.cdgcapital.dgsi.cqrs.enums.AccountType;
 import ma.cdgcapital.dgsi.cqrs.enums.Currency;
 import ma.cdgcapital.dgsi.cqrs.enums.Status;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 
 public class Account {
@@ -18,6 +22,10 @@ public class Account {
     private Boolean isPremium;
     private AccountType accountType;
     private Status status;
+    @CreatedDate
+    private LocalDateTime createdDate;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 
     public Account(String accountNumber, Double balance, Currency currency) {
         this.accountNumber = accountNumber;
@@ -97,5 +105,11 @@ public class Account {
         this.status = status;
     }
 
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
 
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
 }
